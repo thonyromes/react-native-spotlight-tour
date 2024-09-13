@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { SpotlightTourContext } from "../../SpotlightTour.context";
 
-interface UseSpotlightStepProps {
+export interface UseSpotlightStepProps {
   index: number;
 }
 

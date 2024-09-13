@@ -2,7 +2,7 @@ import React from "react";
 import { View, ViewProps } from "react-native";
 import { useSpotlightStep } from "../../hooks/use-spotlight-step/useSpotlightStep.hook";
 
-interface SpotlightStepProps extends ViewProps {
+export interface SpotlightStepProps extends ViewProps {
   index: number;
 }
 
