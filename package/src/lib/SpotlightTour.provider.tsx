@@ -23,7 +23,10 @@ import {
   TourStep,
   ZERO_SPOT,
 } from "./SpotlightTour.context";
-import { TourOverlay, TourOverlayRef } from "./components/tour-overlay/TourOverlay.component";
+import {
+  TourOverlay,
+  TourOverlayRef,
+} from "./components/tour-overlay/TourOverlay.component";
 
 export interface SpotlightTourProviderProps extends TooltipProps {
   /**
@@ -105,7 +108,10 @@ export interface SpotlightTourProviderProps extends TooltipProps {
 /**
  * React provider component to get access to the SpotlightTour context.
  */
-export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProviderProps>((props, ref) => {
+export const SpotlightTourProvider = forwardRef<
+  SpotlightTour,
+  SpotlightTourProviderProps
+>((props, ref) => {
   const {
     arrow,
     flip,
@@ -131,17 +137,19 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
     hideTooltip: () => Promise.resolve({ finished: false }),
   });
 
-  const renderStep = useCallback((index: number): void => {
-    const step = steps[index];
+  const renderStep = useCallback(
+    (index: number): void => {
+      const step = steps[index];
 
-    if (step !== undefined) {
-      Promise.all([
-        overlay.current.hideTooltip(),
-        Promise.resolve().then(step.before),
-      ])
-      .then(() => setCurrent(index));
-    }
-  }, [steps]);
+      if (step !== undefined) {
+        Promise.all([
+          overlay.current.hideTooltip(),
+          Promise.resolve().then(step.before),
+        ]).then(() => setCurrent(index));
+      }
+    },
+    [steps],
+  );
 
   const changeSpot = useCallback((newSpot: LayoutRectangle): void => {
     setSpot(newSpot);
@@ -152,7 +160,7 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
   }, [renderStep]);
 
   const stop = useCallback((): void => {
-    setCurrent(prev => {
+    setCurrent((prev) => {
       if (prev !== undefined) {
         onStop?.({ index: prev, isLast: prev === steps.length - 1 });
       }
@@ -163,9 +171,7 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
 
   const next = useCallback((): void => {
     if (current !== undefined) {
-      current === steps.length - 1
-        ? stop()
-        : renderStep(current + 1);
+      current === steps.length - 1 ? stop() : renderStep(current + 1);
     }
   }, [stop, renderStep, current, steps.length]);
 
@@ -175,29 +181,33 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
     }
   }, [renderStep, current]);
 
-  const goTo = useCallback((index: number): void => {
-    renderStep(index);
-  }, [renderStep]);
+  const goTo = useCallback(
+    (index: number): void => {
+      renderStep(index);
+    },
+    [renderStep],
+  );
 
   const currentStep = useMemo((): TourStep => {
-    const step = current !== undefined
-      ? steps[current]
-      : undefined;
+    const step = current !== undefined ? steps[current] : undefined;
 
     return step ?? { render: () => <></> };
   }, [steps, current]);
 
-  const tour = useMemo((): SpotlightTourCtx => ({
-    changeSpot,
-    current,
-    goTo,
-    next,
-    previous,
-    spot,
-    start,
-    steps,
-    stop,
-  }), [changeSpot, current, goTo, next, previous, spot, start, steps, stop]);
+  const tour = useMemo(
+    (): SpotlightTourCtx => ({
+      changeSpot,
+      current,
+      goTo,
+      next,
+      previous,
+      spot,
+      start,
+      steps,
+      stop,
+    }),
+    [changeSpot, current, goTo, next, previous, spot, start, steps, stop],
+  );
 
   useImperativeHandle(ref, () => ({
     current,
@@ -206,14 +216,20 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
     previous,
     start,
     stop,
+    changeSpot,
+    spot,
+    steps,
   }));
 
   return (
     <SpotlightTourContext.Provider value={tour}>
-      {isChildFunction(children)
-        ? <SpotlightTourContext.Consumer>{children}</SpotlightTourContext.Consumer>
-        : <>{children}</>
-      }
+      {isChildFunction(children) ? (
+        <SpotlightTourContext.Consumer>
+          {children}
+        </SpotlightTourContext.Consumer>
+      ) : (
+        <>{children}</>
+      )}
 
       <TourOverlay
         backdropOpacity={overlayOpacity}

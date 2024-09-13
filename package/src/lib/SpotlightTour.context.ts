@@ -1,4 +1,8 @@
-import { FlipOptions, Placement, ShiftOptions } from "@floating-ui/react-native";
+import {
+  FlipOptions,
+  Placement,
+  ShiftOptions,
+} from "@floating-ui/react-native";
 import { ReactElement, createContext, useContext } from "react";
 import { ColorValue, LayoutRectangle } from "react-native";
 
@@ -214,9 +218,7 @@ export interface SpotlightTour {
    * Terminates the tour execution.
    */
   stop: () => void;
-}
 
-export interface SpotlightTourCtx extends SpotlightTour {
   /**
    * Programmatically change the spot layout
    *
@@ -232,6 +234,8 @@ export interface SpotlightTourCtx extends SpotlightTour {
    */
   steps: TourStep[];
 }
+
+export interface SpotlightTourCtx extends SpotlightTour {}
 
 export const ZERO_SPOT: LayoutRectangle = {
   height: 0,
@@ -257,7 +261,17 @@ export const SpotlightTourContext = createContext<SpotlightTourCtx>({
  * @returns the SpotlightTour context
  */
 export function useSpotlightTour(): SpotlightTour {
-  const { current, goTo, next, previous, start, stop } = useContext(SpotlightTourContext);
+  const {
+    current,
+    goTo,
+    next,
+    previous,
+    start,
+    stop,
+    changeSpot,
+    spot,
+    steps,
+  } = useContext(SpotlightTourContext);
 
   return {
     current,
@@ -266,5 +280,8 @@ export function useSpotlightTour(): SpotlightTour {
     previous,
     start,
     stop,
+    changeSpot,
+    spot,
+    steps,
   };
 }
