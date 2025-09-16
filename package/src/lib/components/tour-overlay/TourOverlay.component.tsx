@@ -39,7 +39,7 @@ import {
   type ShapeOptions,
   SpotlightTourContext,
   type TooltipProps,
-  type TourStep
+  type TourStep,
 } from "../../SpotlightTour.context";
 
 import { Css, DEFAULT_ARROW, arrowCss } from "./TourOverlay.styles";
@@ -77,11 +77,10 @@ export const TourOverlay = forwardRef<TourOverlayRef, TourOverlayProps>((props, 
     shape,
     spot,
     tourStep,
-    useSafeArea = false,
     ...tooltipProps
   } = props;
 
-  const { goTo, next, pause, previous, resume, start, steps, stop, safeAreaInsets: contextSafeAreaInsets, useSafeArea: contextUseSafeArea } = useContext(SpotlightTourContext);
+  const { goTo, next, pause, previous, resume, start, steps, stop } = useContext(SpotlightTourContext);
 
   const arrowRef = useRef<View>(null);
 

@@ -68,7 +68,7 @@ export interface AttachStepProps {
  * @param props the component props
  * @returns an AttachStep React element
  */
-export function AttachStep({ children, fill = false, index, style }: AttachStepProps): ReactElement {
+export function AttachStep({ children, index }: AttachStepProps): ReactElement {
   const { changeSpot, current } = useContext(SpotlightTourContext);
 
   const ref = useRef<View>(null);
