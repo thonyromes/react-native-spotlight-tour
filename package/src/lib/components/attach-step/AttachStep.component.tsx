@@ -68,7 +68,7 @@ export interface AttachStepProps {
  * @returns an AttachStep React element
  */
 export function AttachStep({ children, fill = false, index, style }: AttachStepProps): ReactElement {
-  const { changeSpot, current } = useContext(SpotlightTourContext);
+  const { changeSpot, current, safeAreaInsets, useSafeArea } = useContext(SpotlightTourContext);
 
   const ref = useRef<View>(null);
 
@@ -77,10 +77,20 @@ export function AttachStep({ children, fill = false, index, style }: AttachStepP
 
     if (current !== undefined && indexes.includes(current)) {
       ref.current?.measureInWindow((x, y, width, height) => {
-        changeSpot({ height, width, x, y });
+        // Adjust coordinates if safe area is enabled and insets are available
+        let adjustedX = x;
+        let adjustedY = y;
+        
+        if (useSafeArea && safeAreaInsets) {
+          // Adjust position relative to the safe area
+          adjustedX = x - safeAreaInsets.left;
+          adjustedY = y - safeAreaInsets.top;
+        }
+        
+        changeSpot({ height, width, x: adjustedX, y: adjustedY });
       });
     }
-  }, [changeSpot, current, JSON.stringify(index)]);
+  }, [changeSpot, current, JSON.stringify(index), useSafeArea, safeAreaInsets]);
 
   const onLayout = useCallback((event: LayoutChangeEvent): void => {
     updateSpot();
@@ -91,20 +101,9 @@ export function AttachStep({ children, fill = false, index, style }: AttachStepP
     updateSpot();
   }, [updateSpot]);
 
-  return (
-    <View
-      testID="attach-wrapper-view"
-      ref={ref}
-      style={[{ alignSelf: fill ? "stretch" : "flex-start" }, style]}
-      collapsable={false}
-      focusable={false}
-      onLayout={onLayout}
-    >
-      {cloneElement(
-        children,
-        children.props,
-        children.props.children,
-      )}
-    </View>
+  return cloneElement(
+    children,
+    { ...children.props, onLayout, ref },
+    children.props?.children,
   );
 }

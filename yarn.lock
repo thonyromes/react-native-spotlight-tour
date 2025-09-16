@@ -7191,6 +7191,7 @@ __metadata:
     react-dom: "npm:19.1.0"
     react-is: "npm:19.1.0"
     react-native: "npm:0.80.0"
+    react-native-safe-area-context: "npm:^5.6.1"
     react-native-spotlight-tour: "workspace:^"
     react-native-svg: "npm:^15.12.0"
     react-native-svg-web: "npm:^1.0.9"
@@ -12050,6 +12051,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-safe-area-context@npm:^4.0.0":
+  version: 4.14.1
+  resolution: "react-native-safe-area-context@npm:4.14.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/20f744176b22b67b08b061ac8ea4d56c11539da672e80f766e48a8304a0a19c9ba0c9a903d92b94631888dd827701785b5ac49cec61c2994262708a479701a8d
+  languageName: node
+  linkType: hard
+
+"react-native-safe-area-context@npm:^5.6.1":
+  version: 5.6.1
+  resolution: "react-native-safe-area-context@npm:5.6.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/2fc93cf46a6cbad28e5850bef009905c6db44066fb7e6f7bbce52c2ae4b0467c6718e4f572a42f8387c6b37f6d61ebe79980d0c2b5899e23dc19482a7db8417b
+  languageName: node
+  linkType: hard
+
 "react-native-spotlight-tour-workspace@workspace:.":
   version: 0.0.0-use.local
   resolution: "react-native-spotlight-tour-workspace@workspace:."
@@ -12088,6 +12109,7 @@ __metadata:
     react-is: "npm:19.1.0"
     react-native: "npm:0.80.0"
     react-native-responsive-dimensions: "npm:^3.1.1"
+    react-native-safe-area-context: "npm:^4.0.0"
     react-native-svg: "npm:^15.12.0"
     react-native-testing-mocks: "npm:^1.7.0"
     react-test-renderer: "npm:19.1.0"
@@ -12103,6 +12125,7 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
     react-native: ">=0.50.0"
+    react-native-safe-area-context: ">=3.0.0"
     react-native-svg: ">=12.1.0"
   peerDependenciesMeta:
     react:
@@ -12110,6 +12133,8 @@ __metadata:
     react-dom:
       optional: true
     react-native:
+      optional: false
+    react-native-safe-area-context:
       optional: false
     react-native-svg:
       optional: false

@@ -9,6 +9,7 @@ import {
 
 import { type ChildFn, isChildFunction } from "../helpers/common";
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   type BackdropPressBehavior,
   type Motion,
@@ -107,6 +108,15 @@ export interface SpotlightTourProviderProps extends TooltipProps {
    * An array of `TourStep` objects that define each step of the tour.
    */
   steps: TourStep[];
+  /**
+   * Enable safe area handling for Android edge-to-edge support.
+   * Requires react-native-safe-area-context to be installed and configured.
+   * When enabled, the overlay will respect safe area insets to avoid overlapping
+   * with system bars (status bar, navigation bar, notches, etc.).
+   *
+   * @default false
+   */
+  useSafeArea?: boolean;
 }
 
 /**
@@ -130,6 +140,7 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
     shape = "circle",
     shift,
     steps,
+    useSafeArea = false,
   } = props;
 
   const [current, setCurrent] = useState<number>();
@@ -233,6 +244,10 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
     onResume?.({ index, isLast });
   }, [goTo, onResume, pausedAt, steps.length]);
 
+  // Get safe area insets when enabled
+  const allSafeAreaInsets = useSafeAreaInsets();
+  const safeAreaInsets = useSafeArea ? allSafeAreaInsets : undefined;
+
   const tour = useMemo((): SpotlightTourCtx => ({
     changeSpot,
     current,
@@ -241,12 +256,14 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
     pause,
     previous,
     resume,
+    safeAreaInsets,
     spot,
     start,
     status,
     steps,
     stop,
-  }), [changeSpot, current, goTo, next, previous, spot, start, steps, stop, pause]);
+    useSafeArea,
+  }), [changeSpot, current, goTo, next, previous, safeAreaInsets, spot, start, status, steps, stop, pause, useSafeArea]);
 
   useImperativeHandle(ref, () => ({
     current,
@@ -278,6 +295,7 @@ export const SpotlightTourProvider = forwardRef<SpotlightTour, SpotlightTourProv
         shape={shape}
         spot={spot}
         tourStep={currentStep}
+        useSafeArea={useSafeArea}
         arrow={arrow}
         flip={flip}
         offset={offset}

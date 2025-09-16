@@ -4,6 +4,29 @@ import type { FlipOptions, Placement, ShiftOptions } from "@floating-ui/react-na
 import type { ColorValue, LayoutRectangle } from "react-native";
 
 /**
+ * Edge insets representing safe area boundaries.
+ * Compatible with react-native-safe-area-context EdgeInsets.
+ */
+export interface SafeAreaInsets {
+  /**
+   * Top safe area inset (typically status bar height)
+   */
+  top: number;
+  /**
+   * Bottom safe area inset (typically navigation bar height)
+   */
+  bottom: number;
+  /**
+   * Left safe area inset (for notched devices)
+   */
+  left: number;
+  /**
+   * Right safe area inset (for notched devices)
+   */
+  right: number;
+}
+
+/**
  * Possible status for the tour:
  * - `idle`
  * - `running`
@@ -272,6 +295,10 @@ export interface SpotlightTourCtx extends SpotlightTour {
    */
   changeSpot: (spot: LayoutRectangle) => void;
   /**
+   * Safe area insets for edge-to-edge support
+   */
+  safeAreaInsets?: SafeAreaInsets;
+  /**
    * The spotlight layout.
    */
   spot: LayoutRectangle;
@@ -279,6 +306,10 @@ export interface SpotlightTourCtx extends SpotlightTour {
    * The list of steps for the tour.
    */
   steps: TourStep[];
+  /**
+   * Whether safe area handling is enabled
+   */
+  useSafeArea: boolean;
 }
 
 export const ZERO_SPOT: LayoutRectangle = {
@@ -295,11 +326,13 @@ export const SpotlightTourContext = createContext<SpotlightTourCtx>({
   pause: () => undefined,
   previous: () => undefined,
   resume: () => undefined,
+  safeAreaInsets: undefined,
   spot: ZERO_SPOT,
   start: () => undefined,
   status: "idle",
   steps: [],
   stop: () => undefined,
+  useSafeArea: false,
 });
 
 /**
