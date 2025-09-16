@@ -1,7 +1,7 @@
 {
   "name": "react-native-spotlight-tour-workspace",
   "description": "The React Native Spotlight Tour workspace",
-  "repository": "git@github.com:thonyromes/react-native-spotlight-tour.git",
+  "repository": "git@github.com:thonyromes/react-native-spotlight-tour-nativewind.git",
   "author": "Stack Builders <info@stackbuilders.com> (https://github.com/stackbuilders)",
   "license": "MIT",
   "workspaces": [
