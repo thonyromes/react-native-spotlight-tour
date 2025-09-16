@@ -35,12 +35,11 @@ import {
   type BackdropPressBehavior,
   type Motion,
   type OSConfig,
-  type SafeAreaInsets,
   type Shape,
   type ShapeOptions,
   SpotlightTourContext,
   type TooltipProps,
-  type TourStep,
+  type TourStep
 } from "../../SpotlightTour.context";
 
 import { Css, DEFAULT_ARROW, arrowCss } from "./TourOverlay.styles";
@@ -86,15 +85,6 @@ export const TourOverlay = forwardRef<TourOverlayRef, TourOverlayProps>((props, 
 
   const arrowRef = useRef<View>(null);
 
-  // Use safe area insets from context or fallback to no insets
-  const safeAreaInsets = useMemo((): SafeAreaInsets => {
-    const shouldUseSafeArea = useSafeArea ?? contextUseSafeArea;
-    if (!shouldUseSafeArea || !contextSafeAreaInsets) {
-      return { top: 0, bottom: 0, left: 0, right: 0 };
-    }
-    return contextSafeAreaInsets;
-  }, [useSafeArea, contextUseSafeArea, contextSafeAreaInsets]);
-
   const floating = useMemo((): TooltipProps => ({
     arrow: tourStep.arrow ?? tooltipProps.arrow,
     flip: tourStep.flip ?? tooltipProps.flip,
@@ -110,33 +100,6 @@ export const TourOverlay = forwardRef<TourOverlayRef, TourOverlayProps>((props, 
   const { floatingStyles, middlewareData, placement, refs } = useFloating(floatingOptions);
 
   const tooltipOpacity = useRef(new Animated.Value(0));
-
-  // Calculate overlay dimensions with safe area adjustments
-  const overlayDimensions = useMemo(() => {
-    const fullWidth = vw(100);
-    const fullHeight = vh(100);
-    const shouldUseSafeArea = useSafeArea ?? contextUseSafeArea;
-    
-    if (shouldUseSafeArea && contextSafeAreaInsets) {
-      return {
-        width: fullWidth,
-        height: fullHeight,
-        viewBoxWidth: fullWidth - safeAreaInsets.left - safeAreaInsets.right,
-        viewBoxHeight: fullHeight - safeAreaInsets.top - safeAreaInsets.bottom,
-        offsetX: safeAreaInsets.left,
-        offsetY: safeAreaInsets.top,
-      };
-    }
-    
-    return {
-      width: fullWidth,
-      height: fullHeight,
-      viewBoxWidth: fullWidth,
-      viewBoxHeight: fullHeight,
-      offsetX: 0,
-      offsetY: 0,
-    };
-  }, [useSafeArea, contextUseSafeArea, contextSafeAreaInsets, safeAreaInsets]);
 
   const stepMotion = useMemo((): Motion => {
     return tourStep.motion ?? motion;
@@ -227,28 +190,19 @@ export const TourOverlay = forwardRef<TourOverlayRef, TourOverlayProps>((props, 
       transparent={true}
       visible={current !== undefined}
     >
-      <View testID="Overlay View" style={[Css.overlayView, { 
-        height: overlayDimensions.height, 
-        width: overlayDimensions.width 
-      }]}>
+      <View testID="Overlay View" style={Css.overlayView}>
         <Svg
           testID="Spot Svg"
-          height={overlayDimensions.height}
-          width={overlayDimensions.width}
-          viewBox={`${overlayDimensions.offsetX} ${overlayDimensions.offsetY} ${overlayDimensions.viewBoxWidth} ${overlayDimensions.viewBoxHeight}`}
+          height={vh(100)}
+          width={vw(100)}
+          viewBox={`0 0 ${vw(100)} ${vh(100)}`}
           onPress={handleBackdropPress}
           shouldRasterizeIOS={true}
           renderToHardwareTextureAndroid={true}
         >
           <Defs>
-            <Mask id="mask" x={overlayDimensions.offsetX} y={overlayDimensions.offsetY} height={overlayDimensions.viewBoxHeight} width={overlayDimensions.viewBoxWidth}>
-              <Rect 
-                x={overlayDimensions.offsetX}
-                y={overlayDimensions.offsetY}
-                height={overlayDimensions.viewBoxHeight} 
-                width={overlayDimensions.viewBoxWidth} 
-                fill="#fff" 
-              />
+            <Mask id="mask" x={0} y={0} height="100%" width="100%">
+              <Rect height={vh(100)} width={vw(100)} fill="#fff" />
               <ShapeMask
                 spot={spot}
                 setReference={refs.setReference}
@@ -259,10 +213,8 @@ export const TourOverlay = forwardRef<TourOverlayRef, TourOverlayProps>((props, 
             </Mask>
           </Defs>
           <Rect
-            x={overlayDimensions.offsetX}
-            y={overlayDimensions.offsetY}
-            height={overlayDimensions.viewBoxHeight}
-            width={overlayDimensions.viewBoxWidth}
+            height={vh(100)}
+            width={vw(100)}
             fill={color}
             mask="url(#mask)"
             opacity={backdropOpacity}

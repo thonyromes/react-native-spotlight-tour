@@ -8,9 +8,10 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from "react-native";
 
 import { SpotlightTourContext } from "../../SpotlightTour.context";
+
+import type { LayoutChangeEvent, StyleProp, View, ViewStyle } from "react-native";
 
 export interface ChildProps {
   /**
@@ -67,8 +68,8 @@ export interface AttachStepProps {
  * @param props the component props
  * @returns an AttachStep React element
  */
-export function AttachStep({ children, index }: AttachStepProps): ReactElement {
-  const { changeSpot, current, safeAreaInsets, useSafeArea } = useContext(SpotlightTourContext);
+export function AttachStep({ children, fill = false, index, style }: AttachStepProps): ReactElement {
+  const { changeSpot, current } = useContext(SpotlightTourContext);
 
   const ref = useRef<View>(null);
 
@@ -77,20 +78,10 @@ export function AttachStep({ children, index }: AttachStepProps): ReactElement {
 
     if (current !== undefined && indexes.includes(current)) {
       ref.current?.measureInWindow((x, y, width, height) => {
-        // Adjust coordinates if safe area is enabled and insets are available
-        let adjustedX = x;
-        let adjustedY = y;
-        
-        if (useSafeArea && safeAreaInsets) {
-          // Adjust position relative to the safe area
-          adjustedX = x - safeAreaInsets.left;
-          adjustedY = y - safeAreaInsets.top;
-        }
-        
-        changeSpot({ height, width, x: adjustedX, y: adjustedY });
+        changeSpot({ height, width, x, y });
       });
     }
-  }, [changeSpot, current, JSON.stringify(index), useSafeArea, safeAreaInsets]);
+  }, [changeSpot, current, JSON.stringify(index)]);
 
   const onLayout = useCallback((event: LayoutChangeEvent): void => {
     updateSpot();
