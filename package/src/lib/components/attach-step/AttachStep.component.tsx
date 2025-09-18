@@ -69,7 +69,7 @@ export interface AttachStepProps {
  * @returns an AttachStep React element
  */
 export function AttachStep({ children, index }: AttachStepProps): ReactElement {
-  const { changeSpot, current } = useContext(SpotlightTourContext);
+  const { changeSpot, current, safeAreaInsets, useSafeArea } = useContext(SpotlightTourContext);
 
   const ref = useRef<View>(null);
 
@@ -78,10 +78,15 @@ export function AttachStep({ children, index }: AttachStepProps): ReactElement {
 
     if (current !== undefined && indexes.includes(current)) {
       ref.current?.measureInWindow((x, y, width, height) => {
-        changeSpot({ height, width, x, y });
+        if (useSafeArea && safeAreaInsets) {
+          const adjustedY = y + (safeAreaInsets?.top ?? 0);
+          changeSpot({ height, width, x, y: adjustedY });
+        } else {
+          changeSpot({ height, width, x, y });
+        }
       });
     }
-  }, [changeSpot, current, JSON.stringify(index)]);
+  }, [changeSpot, current, JSON.stringify(index), useSafeArea, safeAreaInsets]);
 
   const onLayout = useCallback((event: LayoutChangeEvent): void => {
     updateSpot();
