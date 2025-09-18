@@ -1,6 +1,6 @@
 {
   "name": "react-native-spotlight-tour",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "React Native library to implement a highly customizable app tour feature with an awesome spotlight effect",
   "repository": "git@github.com:thonyromes/react-native-spotlight-tour-nativewind-v2.git",
   "homepage": "https://stackbuilders.github.io/react-native-spotlight-tour/",
